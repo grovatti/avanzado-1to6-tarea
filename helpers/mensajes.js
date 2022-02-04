@@ -1,12 +1,18 @@
-const mostrarMenu = (itemSeleccionado = 0) => {
+const readline = require('readline');
+const { stdin: input, stdout: output } = require('process');
+const { resolve } = require('path');
+
+const mostrarMenu = async(itemSeleccionado = 0) => {
     const indicaciones = '(Use arrows keys)'.gray;
     const titulo = '? ¿Que desea hacer?'.bold.red;
-    const marcador = '-> ';
+    const marcador = '=> ';
     const sinMarcador = '   ';
     const opciones = [];
-    for (let i = 1; i < 8; i += 1) {
+    
+    for (let i = 1; i < 7; i += 1) {
         opciones.push(`${i}.`);
     }
+    opciones.push('0.');
 
     let itemsMenu = [];
     itemsMenu.push('Crear tarea');
@@ -31,8 +37,29 @@ const mostrarMenu = (itemSeleccionado = 0) => {
         }
         console.log(textoMenu);
     };
+    console.log('');
+    const promesa = new Promise((resolve, reject) => {
+        const rl = readline.createInterface({ input, output });
+        rl.question('Seleccione una opción:', respuesta => {
+            rl.close();
+            resolve(respuesta);
+        });
+    });
+    return promesa;
+}
+
+const pausa = () => {
+    const promesa = new Promise((resolve, reject) => {
+        const rl = readline.createInterface({ input, output });
+        rl.question('Presione ' + 'ENTER'.yellow + ' para continuar', respuesta => {
+            rl.close();
+            resolve(respuesta);
+        });
+    });
+    return promesa;
 }
 
 module.exports = {
-    mostrarMenu
+    mostrarMenu,
+    pausa
 }
